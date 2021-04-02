@@ -14,13 +14,13 @@
 
         #popup {
             position: fixed;
-            height: 20rem;
-            width: 20rem;
+            height: 24rem;
+            width: 24rem;
             border: 3px solid deeppink;
             top: 50%;
             left: 50%;
-            margin-top: -10rem;
-            margin-left: -10rem;
+            margin-top: -12rem;
+            margin-left: -12rem;
             text-align: center;
             border-radius: 50%;
             align-items: center;
@@ -28,8 +28,9 @@
             display: flex;
             transition: all 0.5s;
             opacity: 0;
-            font-size: 10rem;
+            font-size: 6rem;
             background-color: white;
+            color: deeppink;
         }
 
         #popup.active {
@@ -225,7 +226,7 @@ Vive la France.`;
         presidentialSpeech.split(/\. ?/).map(sentence => `${sentence}. `).forEach(sentence => {
 
 
-            const foundExtracts = extracts.find(({extract}) => sentence.match(extract))
+            const foundExtracts = extracts.filter(({extract}) => sentence.match(extract))
 
             const sentenceWithMatch = extracts.reduce((prev, extract) => {
                 return prev.replace(extract.extract, '<span class="match">$&</span>')
@@ -233,10 +234,20 @@ Vive la France.`;
 
             typewriter.typeString(sentenceWithMatch)
 
-            if(foundExtracts) {
+            if(foundExtracts.length > 0) {
+
+                const isAssDry = foundExtracts.some(({assDrys}) => assDrys > 0)
+                const numberOfSips = foundExtracts.reduce((sum, cur) => {
+                    return sum + cur.sips
+                }, 0)
+
                 typewriter.callFunction(() => {
                     popup.classList.add('active')
-                    popup.innerText = "🍺"
+                    if(isAssDry) {
+                        popup.innerText = "Cul-sec 🤪"
+                    } else {
+                        popup.innerText = `${numberOfSips} 🍺`
+                    }
                     setTimeout(() => {
                         popup.classList.remove('active')
                     }, 1000)
@@ -254,8 +265,6 @@ Vive la France.`;
         setInterval(() => {
             window.scroll(0, 100000000000)
         }, 100)
-
-
 
 
     </script>
