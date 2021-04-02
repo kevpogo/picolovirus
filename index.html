@@ -1,4 +1,62 @@
-Mes chers compatriotes, de métropole, de l’outre-mer et de l’étranger.
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, minimal-ui">
+
+    <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+    <style>
+
+        #app {
+            font-size: 3rem
+        }
+
+        #popup {
+            position: fixed;
+            height: 24rem;
+            width: 24rem;
+            border: 3px solid deeppink;
+            top: 50%;
+            left: 50%;
+            margin-top: -12rem;
+            margin-left: -12rem;
+            text-align: center;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            transition: all 0.5s;
+            opacity: 0;
+            font-size: 6rem;
+            background-color: white;
+            color: deeppink;
+        }
+
+        #popup.active {
+            opacity: 1;
+        }
+
+        .match {
+            font-weight: bold;
+            color: deeppink;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+
+<div id="app" >
+
+</div>
+<div id="popup"></div>
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+
+    <script type="text/javascript">
+        const presidentialSpeech = `Mes chers compatriotes, de métropole, de l’outre-mer et de l’étranger.
 La crise sanitaire que nous traversons, cette épidémie de COVID-19, dure depuis maintenant plus d’un an.
 Un an de peine, d’épreuves, où nous aurons été au moins 4 millions et demi à contracter la maladie et où bientôt 100 000 familles auront été endeuillées.
 Un an d’efforts pour tous. D’angoisses, de sacrifices. De fiertés aussi et d’actes héroïques.
@@ -127,4 +185,98 @@ C’est ainsi que nous pourrons rebâtir ce chemin d’espoir, celui qui nous pe
 
 Mais nous tiendrons, unis et déterminés.
 Vive la République.
-Vive la France.
+Vive la France.`;
+
+
+
+        const extracts = [
+            { name: 'mes chers compatriotes', extract: /mes chers compatriotes/gi, sips: 1, assDrys: 0 },
+            { name: 'combat', extract: /combat/gi, sips: 2, assDrys: 0 },
+            { name: 'sacrifice', extract: /sacrifice/gi, sips: 3, assDrys: 0 },
+            { name: 'notre personnel soignant', extract: /notre personnel soignant/gi, sips: 5, assDrys: 0 },
+            { name: 'confinement', extract: /confinement/gi, sips: 2, assDrys: 0 },
+            { name: 'déconfinement progressif', extract: /déconfinement progressif/gi, sips: 0, assDrys: 1 },
+            { name: 'économie', extract: /économie/gi, sips: 1, assDrys: 0 },
+            { name: 'petits commerces', extract: /petits commerces/gi, sips: 2, assDrys: 0 },
+            { name: 'vaccin', extract: /vaccin/gi, sips: 0, assDrys: 1 },
+            { name: 'soutien', extract: /soutien/gi, sips: 2, assDrys: 0 },
+            { name: 'responsabilité', extract: /responsabilité/gi, sips: 5, assDrys: 0 },
+            { name: 'civisme', extract: /civisme/gi, sips: 3, assDrys: 0 },
+        ];
+        let sips = 0;
+        let assDrys = 0;
+        extracts.forEach((citation) => {
+            const nb = (presidentialSpeech.match(citation.extract) || []).length;
+            sips += nb * citation.sips;
+            assDrys += nb * citation.assDrys;
+        });
+        console.log(`Gorgees: ${sips}`);
+        console.log(`Cul-secs: ${assDrys}`);
+
+
+        const app = document.getElementById('app');
+        const popup = document.getElementById('popup');
+
+        const typewriter = new Typewriter(app, {
+            loop: false,
+            delay: 40
+
+        });
+
+        presidentialSpeech.split(/\. ?/).map(sentence => `${sentence}. `).forEach(sentence => {
+
+
+            const foundExtracts = extracts.filter(({extract}) => sentence.match(extract))
+
+            const sentenceWithMatch = extracts.reduce((prev, extract) => {
+                return prev.replace(extract.extract, '<span class="match">$&</span>')
+            }, sentence)
+
+            typewriter.typeString(sentenceWithMatch)
+
+            if(foundExtracts.length > 0) {
+
+                const isAssDry = foundExtracts.some(({assDrys}) => assDrys > 0)
+                const numberOfSips = foundExtracts.reduce((sum, cur) => {
+                    return sum + cur.sips
+                }, 0)
+
+                typewriter.callFunction(() => {
+                    popup.classList.add('active')
+                    if(isAssDry) {
+                        popup.innerText = "Cul-sec 🤪"
+                    } else {
+                        popup.innerText = `${numberOfSips} 🍺`
+                    }
+                    setTimeout(() => {
+                        popup.classList.remove('active')
+                    }, 1000)
+                    console.log(foundExtracts.name)
+                })
+                typewriter.pauseFor(1000)
+            }
+
+
+        })
+
+        typewriter.start()
+
+
+        setInterval(() => {
+            window.scroll(0, 100000000000)
+        }, 100)
+
+
+    </script>
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
