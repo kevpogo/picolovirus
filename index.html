@@ -1,4 +1,7 @@
-Mes chers compatriotes, de métropole, de l’outre-mer et de l’étranger.
+<div id="app" />
+
+<script type="text/javascript">
+const presidentialSpeech = `Mes chers compatriotes, de métropole, de l’outre-mer et de l’étranger.
 La crise sanitaire que nous traversons, cette épidémie de COVID-19, dure depuis maintenant plus d’un an.
 Un an de peine, d’épreuves, où nous aurons été au moins 4 millions et demi à contracter la maladie et où bientôt 100 000 familles auront été endeuillées.
 Un an d’efforts pour tous. D’angoisses, de sacrifices. De fiertés aussi et d’actes héroïques.
@@ -127,4 +130,30 @@ C’est ainsi que nous pourrons rebâtir ce chemin d’espoir, celui qui nous pe
 
 Mais nous tiendrons, unis et déterminés.
 Vive la République.
-Vive la France.
+Vive la France.`;
+const extracts = [
+  { extract: /mes chers compatriotes/gi, sips: 1, assDrys: 0 },
+  { extract: /combat/gi, sips: 2, assDrys: 0 },
+  { extract: /sacrifice/gi, sips: 3, assDrys: 0 },
+  { extract: /notre personnel soignant/gi, sips: 5, assDrys: 0 },
+  { extract: /confinement/gi, sips: 2, assDrys: 0 },
+  { extract: /déconfinement progressif/gi, sips: 0, assDrys: 1 },
+  { extract: /économie/gi, sips: 1, assDrys: 0 },
+  { extract: /petits commerces/gi, sips: 2, assDrys: 0 },
+  { extract: /vaccin/gi, sips: 0, assDrys: 1 },
+  { extract: /soutien/gi, sips: 2, assDrys: 0 },
+  { extract: /responsabilité/gi, sips: 5, assDrys: 0 },
+  { extract: /civisme/gi, sips: 3, assDrys: 0 },
+];
+let sips = 0;
+let assDrys = 0;
+extracts.forEach((citation) => {
+  const nb = (presidentialSpeech.match(citation.extract) || []).length;
+  sips += nb * citation.sips;
+  assDrys += nb * citation.assDrys;
+});
+console.log(`Gorgees: ${sips}`);
+console.log(`Cul-secs: ${assDrys}`);
+
+document.getElementById("app").innerText = presidentialSpeech;
+</script>
