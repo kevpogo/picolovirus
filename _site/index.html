@@ -4,35 +4,66 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, minimum-scale=1, minimal-ui">
-
-    <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <title>Picolovirus 🍺</title>
     <style>
 
-        #app {
-            font-size: 3rem
+        html, body {
+            min-height: 100%;
         }
+        body {
+            background-image:url("./tv.jpg"), linear-gradient(90deg, rgba(254,254,232,1) 0%, rgba(249,232,184,1) 100%);
+            background-position: center bottom;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        #prompter {
+            font-family: 'New Tegomin', serif;
+            overflow: hidden;
+            color: white;
+            position: absolute;
+            bottom: 13vw;
+            right: 19%;
+            width: 36%;
+            height: 27vw;
+            font-size: 1.5rem;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+
 
         #popup {
+            font-family: 'Bangers', cursive;
+            background-image: url("opup-bubble.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
             position: fixed;
-            height: 24rem;
-            width: 24rem;
-            border: 3px solid deeppink;
-            top: 50%;
+            height: 32rem;
+            width: 30rem;
+            padding-right: 6rem;
+            padding-bottom: 4rem;
+            top: 25%;
             left: 50%;
-            margin-top: -12rem;
-            margin-left: -12rem;
+            margin-top: -18rem;
+            margin-left: -18rem;
             text-align: center;
-            border-radius: 50%;
             align-items: center;
             justify-content: center;
-            display: flex;
             transition: all 0.5s;
             opacity: 0;
+            display: flex;
             font-size: 6rem;
-            background-color: white;
-            color: deeppink;
         }
 
+        .before-game {
+            display: none!important;
+        }
         #popup.active {
             opacity: 1;
         }
@@ -42,6 +73,64 @@
             color: deeppink;
         }
 
+        @media (min-width: 1273px) {
+            body {
+                background-size: cover;
+            }
+            #prompter {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 700px) {
+            #prompter {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 1273px) and (min-width: 700px){
+            #prompter {
+                font-size: 1.5rem;
+            }
+        }
+
+        #rules {
+
+        }
+        .rule {
+            display: inline-block;
+            padding: 2rem;
+            border: solid 2px black;
+            background-color: white;
+            margin: 0.5rem;
+
+
+
+        }
+        .citation {
+            text-transform: capitalize;
+        }
+
+        .to-drink {
+            font-family: 'Bangers', cursive;
+        }
+
+
+        #start-button {
+            display: inline-block;
+            cursor: pointer;
+            height: 10rem;
+            width: 10rem;
+            background-image: url("PlayButton.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+
+        }
+        .header {
+            z-index: 100;
+            text-align: center;
+        }
 
 
     </style>
@@ -49,10 +138,13 @@
 
 <body>
 
-<div id="app" >
-
+<div id="popup" class="before-game"></div>
+<div class="header">
+    <div id="rules"></div>
+    <a href="#" onclick="startGame()" id="start-button"></a>
 </div>
-<div id="popup"></div>
+<div id="prompter" class="before-game" >
+</div>
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
 
     <script type="text/javascript">
@@ -188,9 +280,8 @@ Vive la République.
 Vive la France.`;
 
 
-
         const extracts = [
-            { name: 'mes chers compatriotes', extract: /mes chers compatriotes/gi, sips: 1, assDrys: 0 },
+            { name: 'mes chers compatriotes', extract: /mes chers compatriotes/gi, sips: 1, assDrys: 1 },
             { name: 'combat', extract: /combat/gi, sips: 2, assDrys: 0 },
             { name: 'sacrifice', extract: /sacrifice/gi, sips: 3, assDrys: 0 },
             { name: 'notre personnel soignant', extract: /notre personnel soignant/gi, sips: 5, assDrys: 0 },
@@ -203,68 +294,94 @@ Vive la France.`;
             { name: 'responsabilité', extract: /responsabilité/gi, sips: 5, assDrys: 0 },
             { name: 'civisme', extract: /civisme/gi, sips: 3, assDrys: 0 },
         ];
-        let sips = 0;
-        let assDrys = 0;
-        extracts.forEach((citation) => {
-            const nb = (presidentialSpeech.match(citation.extract) || []).length;
-            sips += nb * citation.sips;
-            assDrys += nb * citation.assDrys;
-        });
-        console.log(`Gorgees: ${sips}`);
-        console.log(`Cul-secs: ${assDrys}`);
 
 
-        const app = document.getElementById('app');
-        const popup = document.getElementById('popup');
+        printRules()
+        function printRules() {
+            const rulesDiv = document.getElementById('rules')
+            extracts.map(rule => {
+                const ruleDiv = document.createElement('div')
+                ruleDiv.classList.add('rule')
+                const citationSpan = document.createElement("span")
+                citationSpan.classList.add('citation')
+                citationSpan.innerText = `"${rule.name}" : `
+                ruleDiv.appendChild(citationSpan)
 
-        const typewriter = new Typewriter(app, {
-            loop: false,
-            delay: 40
-
-        });
-
-        presidentialSpeech.split(/\. ?/).map(sentence => `${sentence}. `).forEach(sentence => {
-
-
-            const foundExtracts = extracts.filter(({extract}) => sentence.match(extract))
-
-            const sentenceWithMatch = extracts.reduce((prev, extract) => {
-                return prev.replace(extract.extract, '<span class="match">$&</span>')
-            }, sentence)
-
-            typewriter.typeString(sentenceWithMatch)
-
-            if(foundExtracts.length > 0) {
-
-                const isAssDry = foundExtracts.some(({assDrys}) => assDrys > 0)
-                const numberOfSips = foundExtracts.reduce((sum, cur) => {
-                    return sum + cur.sips
-                }, 0)
-
-                typewriter.callFunction(() => {
-                    popup.classList.add('active')
-                    if(isAssDry) {
-                        popup.innerText = "Cul-sec 🤪"
-                    } else {
-                        popup.innerText = `${numberOfSips} 🍺`
-                    }
-                    setTimeout(() => {
-                        popup.classList.remove('active')
-                    }, 1000)
-                    console.log(foundExtracts.name)
-                })
-                typewriter.pauseFor(1000)
-            }
+                const toDrinkSpan = document.createElement("span")
+                toDrinkSpan.classList.add('to-drink')
+                toDrinkSpan.innerText = rule.assDrys > 0 ? 'cul-sec !' : `${rule.sips} gorgées`
+                ruleDiv.appendChild(toDrinkSpan)
 
 
-        })
+                return ruleDiv
+            }).forEach(ruleElement => rulesDiv.appendChild(ruleElement))
 
-        typewriter.start()
+
+        }
+        function deleteRules() {
+            const rulesDiv = document.getElementById('rules')
+            const startButton = document.getElementById('start-button')
+            startButton.remove()
+            rulesDiv.remove()
+        }
+
+        function startGame() {
+            deleteRules()
+            const prompter = document.getElementById('prompter');
+            const popup = document.getElementById('popup');
+            popup.classList.remove("before-game")
+            prompter.classList.remove("before-game")
+            const typewriter = new Typewriter(prompter, {
+                loop: false,
+                delay: 1
+
+            });
+
+            presidentialSpeech.split(/\. ?/).map(sentence => `${sentence}. `).forEach(sentence => {
 
 
-        setInterval(() => {
-            window.scroll(0, 100000000000)
-        }, 100)
+                const foundExtracts = extracts.filter(({extract}) => sentence.match(extract))
+
+                const sentenceWithMatch = extracts.reduce((prev, extract) => {
+                    return prev.replace(extract.extract, '<span class="match">$&</span>')
+                }, sentence)
+
+                typewriter.typeString(sentenceWithMatch)
+
+                if (foundExtracts.length > 0) {
+
+                    const isAssDry = foundExtracts.some(({assDrys}) => assDrys > 0)
+                    const numberOfSips = foundExtracts.reduce((sum, cur) => {
+                        return sum + cur.sips
+                    }, 0)
+
+                    typewriter.callFunction(() => {
+                        popup.classList.add('active')
+                        if (isAssDry) {
+                            popup.innerText = "Cul-sec 🤪"
+                        } else {
+                            popup.innerText = `${numberOfSips} 🍺`
+                        }
+                        setTimeout(() => {
+                            popup.classList.remove('active')
+                        }, 1000)
+                        console.log(foundExtracts.name)
+                    })
+                    typewriter.pauseFor(1000)
+                }
+
+
+            })
+
+            typewriter.start()
+
+
+            setInterval(() => {
+                prompter.scroll(0, 100000000000)
+            }, 100)
+        }
+
+
 
 
     </script>
