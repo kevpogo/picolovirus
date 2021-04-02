@@ -22,6 +22,7 @@
         }
 
         #prompter {
+            z-index: 0;
             font-family: 'New Tegomin', serif;
             overflow: hidden;
             color: white;
@@ -38,6 +39,7 @@
 
 
         #popup {
+            z-index: 10;
             font-family: 'Bangers', cursive;
             background-image: url("opup-bubble.png");
             background-size: contain;
@@ -281,7 +283,7 @@ Vive la France.`;
 
 
         const extracts = [
-            { name: 'mes chers compatriotes', extract: /mes chers compatriotes/gi, sips: 1, assDrys: 1 },
+            { name: 'mes chers compatriotes', extract: /mes chers compatriotes/gi, sips: 1, assDrys: 0 },
             { name: 'combat', extract: /combat/gi, sips: 2, assDrys: 0 },
             { name: 'sacrifice', extract: /sacrifice/gi, sips: 3, assDrys: 0 },
             { name: 'notre personnel soignant', extract: /notre personnel soignant/gi, sips: 5, assDrys: 0 },
@@ -333,7 +335,7 @@ Vive la France.`;
             prompter.classList.remove("before-game")
             const typewriter = new Typewriter(prompter, {
                 loop: false,
-                delay: 1
+                delay: 40
 
             });
 

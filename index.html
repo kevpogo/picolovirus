@@ -22,6 +22,7 @@
         }
 
         #prompter {
+            z-index: 0;
             font-family: 'New Tegomin', serif;
             overflow: hidden;
             color: white;
@@ -38,6 +39,7 @@
 
 
         #popup {
+            z-index: 10;
             font-family: 'Bangers', cursive;
             background-image: url("opup-bubble.png");
             background-size: contain;
@@ -333,7 +335,7 @@ Vive la France.`;
             prompter.classList.remove("before-game")
             const typewriter = new Typewriter(prompter, {
                 loop: false,
-                delay: 1
+                delay: 40
 
             });
 
